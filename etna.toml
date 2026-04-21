@@ -1,0 +1,51 @@
+name = "half"
+language = "Rust"
+
+[workload]
+name = "half"
+crate = "half"
+description = "IEEE 754 binary16 (f16) and bfloat16 support — ETNA workload."
+
+[[variant]]
+name = "max_min_nan_handling_a61f31b_1"
+property = "property_f16_max_min_nan"
+injection = "marauders"
+marker = "max_min_nan_handling"
+source_commit = "a61f31bace6b63c6d3336a3867b5617976b0653e"
+files = ["src/binary16.rs"]
+frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+witnesses = [
+    "witness_f16_max_min_nan_case_self_nan_max",
+    "witness_f16_max_min_nan_case_self_nan_min",
+    "witness_f16_max_min_nan_case_other_nan_max",
+    "witness_f16_max_min_nan_case_both_nan_max",
+    "witness_f16_max_min_nan_case_non_nan_max",
+]
+
+[[variant]]
+name = "partial_cmp_sign_magnitude_22b5bd6_1"
+property = "property_f16_ord_sign_magnitude"
+injection = "patch"
+patch = "patches/partial_cmp_sign_magnitude_22b5bd6_1.patch"
+source_commit = "22b5bd6c086d4caf8651bf5b866241ba8ce67407"
+files = ["src/binary16.rs"]
+frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+witnesses = [
+    "witness_f16_ord_sign_magnitude_case_neg_order",
+    "witness_f16_ord_sign_magnitude_case_neg_zero_eq",
+    "witness_f16_ord_sign_magnitude_case_mixed_sign",
+]
+
+[[variant]]
+name = "subnormal_conversion_18e6467_1"
+property = "property_f16_subnormal_roundtrip"
+injection = "patch"
+patch = "patches/subnormal_conversion_18e6467_1.patch"
+source_commit = "18e6467b52f821d21a7179d1da5ac5aded63b3bd"
+files = ["src/binary16/arch.rs"]
+frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+witnesses = [
+    "witness_f16_subnormal_roundtrip_case_min_positive_subnormal",
+    "witness_f16_subnormal_roundtrip_case_mid_subnormal",
+    "witness_f16_subnormal_roundtrip_case_neg_subnormal",
+]
