@@ -248,6 +248,8 @@ pub mod vec;
 pub use bfloat::bf16;
 pub use binary16::f16;
 
+pub mod etna;
+
 #[cfg(feature = "rand_distr")]
 mod rand_distr;
 

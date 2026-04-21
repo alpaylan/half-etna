@@ -518,11 +518,21 @@ impl f16 {
     #[inline]
     #[must_use]
     pub fn max(self, other: f16) -> f16 {
+        /*| max_min_nan_handling [etna] */
         if self.is_nan() || other > self {
             other
         } else {
             self
         }
+        /*|| max_min_nan_handling_a61f31b_1 */
+        /*|
+        if other > self && !other.is_nan() {
+            other
+        } else {
+            self
+        }
+        */
+        /* |*/
     }
 
     /// Returns the minimum of the two numbers.
@@ -541,11 +551,21 @@ impl f16 {
     #[inline]
     #[must_use]
     pub fn min(self, other: f16) -> f16 {
+        /*| max_min_nan_handling [etna] */
         if self.is_nan() || other < self {
             other
         } else {
             self
         }
+        /*|| max_min_nan_handling_a61f31b_1 */
+        /*|
+        if other < self && !other.is_nan() {
+            other
+        } else {
+            self
+        }
+        */
+        /* |*/
     }
 
     /// Restrict a value to a certain interval unless it is NaN.

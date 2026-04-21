@@ -8,3 +8,7 @@ target/
 
 # VS Code
 .vscode/
+
+# ETNA workload caches
+.hegel/
+progress.jsonl
