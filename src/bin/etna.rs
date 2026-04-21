@@ -304,7 +304,10 @@ fn run_crabcheck_property(property: &str) -> Outcome {
     }
     CC_COUNTER.store(0, Ordering::Relaxed);
     let t0 = Instant::now();
-    let cfg = crabcheck_qc::Config { tests: 200 };
+    // 20k trials across the board: crabcheck's Arbitrary::arbitrary for u16
+    // yields a distribution that misses the ~3% NaN bit band often enough
+    // that 200 trials leave the f16::max/min bug undetected on a typical seed.
+    let cfg = crabcheck_qc::Config { tests: 20_000 };
     let result = match property {
         "F16MaxMinNan" => crabcheck_qc::quickcheck_with_config(
             cfg,
@@ -315,7 +318,7 @@ fn run_crabcheck_property(property: &str) -> Outcome {
             cc_f16_ord_sign_magnitude as fn((u16, u16)) -> Option<bool>,
         ),
         "F16SubnormalRoundtrip" => crabcheck_qc::quickcheck_with_config(
-            crabcheck_qc::Config { tests: 20_000 },
+            cfg,
             cc_f16_subnormal_roundtrip as fn(u16) -> Option<bool>,
         ),
         _ => {
