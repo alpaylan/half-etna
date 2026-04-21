@@ -1,0 +1,115 @@
+diff --git a/src/binary16.rs b/src/binary16.rs
+index 1ab82a4..ba5d990 100644
+--- a/src/binary16.rs
++++ b/src/binary16.rs
+@@ -848,11 +848,7 @@ fn from(x: u8) -> f16 {
+ 
+ impl PartialEq for f16 {
+     fn eq(&self, other: &f16) -> bool {
+-        if self.is_nan() || other.is_nan() {
+-            false
+-        } else {
+-            (self.0 == other.0) || ((self.0 | other.0) & 0x7FFFu16 == 0)
+-        }
++        !self.is_nan() && !other.is_nan() && self.0 == other.0
+     }
+ }
+ 
+@@ -860,88 +856,29 @@ impl PartialOrd for f16 {
+     fn partial_cmp(&self, other: &f16) -> Option<Ordering> {
+         if self.is_nan() || other.is_nan() {
+             None
++        } else if self.0 == other.0 {
++            Some(Ordering::Equal)
++        } else if self.0 < other.0 {
++            Some(Ordering::Less)
+         } else {
+-            let neg = self.0 & 0x8000u16 != 0;
+-            let other_neg = other.0 & 0x8000u16 != 0;
+-            match (neg, other_neg) {
+-                (false, false) => Some(self.0.cmp(&other.0)),
+-                (false, true) => {
+-                    if (self.0 | other.0) & 0x7FFFu16 == 0 {
+-                        Some(Ordering::Equal)
+-                    } else {
+-                        Some(Ordering::Greater)
+-                    }
+-                }
+-                (true, false) => {
+-                    if (self.0 | other.0) & 0x7FFFu16 == 0 {
+-                        Some(Ordering::Equal)
+-                    } else {
+-                        Some(Ordering::Less)
+-                    }
+-                }
+-                (true, true) => Some(other.0.cmp(&self.0)),
+-            }
++            Some(Ordering::Greater)
+         }
+     }
+ 
+     fn lt(&self, other: &f16) -> bool {
+-        if self.is_nan() || other.is_nan() {
+-            false
+-        } else {
+-            let neg = self.0 & 0x8000u16 != 0;
+-            let other_neg = other.0 & 0x8000u16 != 0;
+-            match (neg, other_neg) {
+-                (false, false) => self.0 < other.0,
+-                (false, true) => false,
+-                (true, false) => (self.0 | other.0) & 0x7FFFu16 != 0,
+-                (true, true) => self.0 > other.0,
+-            }
+-        }
++        !self.is_nan() && !other.is_nan() && self.0 < other.0
+     }
+ 
+     fn le(&self, other: &f16) -> bool {
+-        if self.is_nan() || other.is_nan() {
+-            false
+-        } else {
+-            let neg = self.0 & 0x8000u16 != 0;
+-            let other_neg = other.0 & 0x8000u16 != 0;
+-            match (neg, other_neg) {
+-                (false, false) => self.0 <= other.0,
+-                (false, true) => (self.0 | other.0) & 0x7FFFu16 == 0,
+-                (true, false) => true,
+-                (true, true) => self.0 >= other.0,
+-            }
+-        }
++        !self.is_nan() && !other.is_nan() && self.0 <= other.0
+     }
+ 
+     fn gt(&self, other: &f16) -> bool {
+-        if self.is_nan() || other.is_nan() {
+-            false
+-        } else {
+-            let neg = self.0 & 0x8000u16 != 0;
+-            let other_neg = other.0 & 0x8000u16 != 0;
+-            match (neg, other_neg) {
+-                (false, false) => self.0 > other.0,
+-                (false, true) => (self.0 | other.0) & 0x7FFFu16 != 0,
+-                (true, false) => false,
+-                (true, true) => self.0 < other.0,
+-            }
+-        }
++        !self.is_nan() && !other.is_nan() && self.0 > other.0
+     }
+ 
+     fn ge(&self, other: &f16) -> bool {
+-        if self.is_nan() || other.is_nan() {
+-            false
+-        } else {
+-            let neg = self.0 & 0x8000u16 != 0;
+-            let other_neg = other.0 & 0x8000u16 != 0;
+-            match (neg, other_neg) {
+-                (false, false) => self.0 >= other.0,
+-                (false, true) => true,
+-                (true, false) => (self.0 | other.0) & 0x7FFFu16 == 0,
+-                (true, true) => self.0 <= other.0,
+-            }
+-        }
++        !self.is_nan() && !other.is_nan() && self.0 >= other.0
+     }
+ }
+ 
