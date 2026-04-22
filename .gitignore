@@ -11,4 +11,7 @@ target/
 
 # ETNA workload caches
 .hegel/
+.marauders/
+.migration-cache/
+etna.log
 progress.jsonl
