@@ -2,6 +2,7 @@ name = "half"
 description = "IEEE 754 binary16 (f16) and bfloat16 support — ETNA workload."
 language = "rust"
 crate = "half"
+strategies = ["proptest", "quickcheck", "crabcheck", "hegel"]
 base_commit = "bd25b96c3d6ca1133a15cccab6f281f9e1e8cea5"
 
 [[tasks]]
